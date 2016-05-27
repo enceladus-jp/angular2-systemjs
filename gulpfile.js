@@ -60,5 +60,8 @@ gulp.task('copy:assets', ['clean'], function() {
     .pipe(gulp.dest('dist'))
 });
 
+// the build task (no run)
 gulp.task('build', ['compile', 'copy']);
+
+// the default task (set to build)
 gulp.task('default', ['build']);
