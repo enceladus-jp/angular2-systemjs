@@ -2,7 +2,6 @@ const gulp = require('gulp');
 const del = require('del');
 const typescript = require('gulp-typescript');
 const sourcemaps = require('gulp-sourcemaps');
-const runsequence = require('run-sequence') ;
 
 const tscConfig = require('./tsconfig.json');
 
@@ -15,17 +14,22 @@ gulp.task('clean', function () {
 gulp.task('compile', ['clean'], function () {
   return gulp
     .src('src/client/app/**/*.ts')
-    .pipe(typescript(tscConfig.compilerOptions))
-    .pipe(sourcemaps.init())          // <--- sourcemaps
-    .pipe(typescript(tscConfig.compilerOptions))
-    .pipe(sourcemaps.write('.'))      // <--- sourcemaps
+    .pipe(typescript(tscConfig.compilerOptions))  
     .pipe(gulp.dest('dist/app'));
 });
 
+// Copy files
+gulp.task('copy', ['clean', 'copy:vendor', 'copy:angular', 'copy:rxjs', 'copy:assets', 'copy:assets_dir']) ;
+
+// Copy assets direcotry
+gulp.task('copy:assets_dir', ['clean'], function(){
+    return gulp.src('src/client/assets/**/*')
+      .pipe(gulp.dest('dist/assets'))
+}) ;
+
 // copy dependencies
-gulp.task('copy:vendor', ['clean', 'copy:angular', 'copy:rxjs'], function() {
+gulp.task('copy:vendor', ['clean'], function() {
   return gulp.src([
-      // 'node_modules/angular2/bundles/angular2-polyfills.js',
       'node_modules/systemjs/dist/system.src.js',
       'node_modules/core-js/client/shim.min.js',
       'node_modules/zone.js/dist/zone.js',
@@ -56,5 +60,5 @@ gulp.task('copy:assets', ['clean'], function() {
     .pipe(gulp.dest('dist'))
 });
 
-gulp.task('build', ['compile', 'copy:vendor', 'copy:assets']);
+gulp.task('build', ['compile', 'copy']);
 gulp.task('default', ['build']);
