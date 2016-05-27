@@ -23,11 +23,10 @@ gulp.task('compile', ['clean'], function () {
 });
 
 // copy dependencies
-gulp.task('copy:vendor', ['clean', 'copy:angular'], function() {
+gulp.task('copy:vendor', ['clean', 'copy:angular', 'copy:rxjs'], function() {
   return gulp.src([
-      'node_modules/angular2/bundles/angular2-polyfills.js',
+      // 'node_modules/angular2/bundles/angular2-polyfills.js',
       'node_modules/systemjs/dist/system.src.js',
-      'node_modules/rxjs/bundles/Rx.js',
       'node_modules/core-js/client/shim.min.js',
       'node_modules/zone.js/dist/zone.js',
       'node_modules/reflect-metadata/Reflect.js'
@@ -41,6 +40,14 @@ gulp.task('copy:angular', ['clean'], function(){
     'node_modules/@angular/**/*'
   ])
   .pipe(gulp.dest('dist/vendor/@angular'))
+}) ;
+
+// copy rxjs 
+gulp.task('copy:rxjs', ['clean'], function(){
+  return gulp.src([
+    'node_modules/rxjs/**/*'
+  ])
+  .pipe(gulp.dest('dist/vendor/rxjs'))
 }) ;
 
 // copy static assets - i.e. non TypeScript compiled source
